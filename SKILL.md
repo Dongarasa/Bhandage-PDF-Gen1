@@ -55,12 +55,12 @@ Source PDF: `~/Documents/Workbook/Source/Final_Update_IMO.LR.G3_Book.pdf`
 
 ### Step 2 — Generate pages (one at a time)
 
-**Always ask the user before generating any NEW page.** After a fix on the current page, regenerate + open automatically without asking.
+**`--page` is 1-based.** Always ask before generating a NEW page. After a fix, regenerate + open automatically without asking.
 
 ```bash
 python3 personal/agents/pdf-gen/scripts/generate_g3_page.py \
   --content personal/workspace/pdf-gen/ch<N>/content.json \
-  --page <page_index> \
+  --page <1-based page number> \
   --output personal/workspace/pdf-gen/ch<N>/page-<NNN>.pdf
 ```
 
@@ -68,8 +68,6 @@ After generation, open immediately in Adobe Acrobat DC:
 ```bash
 open -a "/Applications/Adobe Acrobat DC/Adobe Acrobat.app" personal/workspace/pdf-gen/ch<N>/page-<NNN>.pdf
 ```
-
-**Auto-open rule**: After any fix, always regenerate + open the same page without asking. Only ask before moving to a NEW page.
 
 Then ask: **"Theek hai? Ya kuch fix karna hai?"** — wait for approval before next page.
 
@@ -95,30 +93,16 @@ print('Done')
 
 ## Page Templates (Figma)
 
-Four templates from Figma file `EChVfa2DRvYK24AZbrSe9E`:
-
 | Template | Figma Node | Header | When to use |
 |---|---|---|---|
-| **Temp1** | 232:4 | Full color bar (92px) + Chapter name + Grade pill (no logo) | Chapter intro **page 1** |
-| **Temp2** | 232:12 | Full color bar (92px) + "Ch N: ChName" + section title (no logo) | MCQ/CA section **first page** |
+| **Temp1** | 232:4 | Full color bar (92px) + Chapter name + Grade pill | Chapter intro **page 1** |
+| **Temp2** | 232:12 | Full color bar (92px) + "Ch N: ChName" + section title | MCQ/CA section **first page** |
 | **Temp3** | 232:17 | L-shape bezier curve (top+left) + Logo top-right | Chapter intro **page 2** + MCQ **page 2** |
 | **Temp4** | 232:21 | Thin 12px strip + Logo top-right | MCQ/CA **page 3 onwards** |
-
-**Logo specs (Temp3 & Temp4):** `right: fig(24)`, `top: fig(32)`, `width: fig(80)` — transparent PNG from `personal/agents/pdf-gen/assets/cuemath-wordmark-tagline.png`.
-
-**Temp3 L-shape bezier** (PIL polygon, no cairosvg):
-```
-M0 0 → L595 0 → L595 12 → L40 12
-→ cubic(40,12)(29,12)(20,21)(20,32) → L20 72
-→ cubic(20,72)(20,83)(11,92)(0,92) → Z
-```
-All coords scaled via `fig()`.
 
 ---
 
 ## Chapter Color System
-
-Cycles mod 4 by chapter number. All values from Cuemath design-system tokens:
 
 | Slot | Chapters | 500 (accent) | 100 (page bg) | 200 (table bg) | 700 (table border) |
 |---|---|---|---|---|---|
@@ -127,19 +111,11 @@ Cycles mod 4 by chapter number. All values from Cuemath design-system tokens:
 | 2 | 3, 7, 11 | Info `#74ACFC` | `#EEF6FF` | `#DEECFF` | `#407BD6` |
 | 3 | 4, 8, 12 | Success `#6AC88A` | `#ECF9EF` | `#DAF3E0` | `#28995A` |
 
-**Badge bg** uses 300-shade: Gold `#FAD6AC`, Error `#FFB8B7`, Info `#C1DCFF`, Success `#BCEAC8`.
-
-Helpers in `imo_g3_base.py`:
-- `chapter_color(ch)` → 500 accent (border/outline)
-- `chapter_badge_bg(ch)` → 300-shade light fill (badge background)
-- `chapter_table_bg(ch)` → 200-shade (filled rows in letter tiles)
-- `chapter_table_bor(ch)` → 700-shade (tile borders)
+Badge bg (300-shade): Gold `#FAD6AC`, Error `#FFB8B7`, Info `#C1DCFF`, Success `#BCEAC8`.
 
 ---
 
 ## Fonts
-
-Stored in `~/Library/Fonts/`:
 
 | Key | Font file | Size | Used for |
 |---|---|---|---|
@@ -148,9 +124,9 @@ Stored in `~/Library/Fonts/`:
 | `ch_big` | Athletics-Black.otf | 32pt | Large decorative chapter number |
 | `grade` | Athletics-Regular.otf | 12pt | Grade pill |
 | `sec_head` | UntitledSans-Medium.otf | 14pt | Section headings |
-| `medium` | UntitledSans-Medium.otf | 12pt | "Directions (N-N):" prefix label |
-| `body` | UntitledSans-Regular.otf | 12pt | Body text, tiles text |
-| `direction` | UntitledSans-Regular.otf | 12pt | Direction continuation text (NOT Light — Regular) |
+| `medium` | UntitledSans-Medium.otf | 12pt | Labels, bold inline text |
+| `body` | UntitledSans-Regular.otf | 12pt | Body text |
+| `direction` | UntitledSans-Regular.otf | 12pt | Direction continuation (NOT Light) |
 | `q_badge` | UntitledSans-Medium.otf | 12pt | Question number in badge |
 | `q_text` | UntitledSans-Regular.otf | 12pt | Question main text |
 | `opt_label` | UntitledSans-Medium.otf | 10pt | ABCD label inside checkbox |
@@ -161,165 +137,96 @@ Stored in `~/Library/Fonts/`:
 
 ## Intro Page Layout
 
-Indentation levels (Figma 72-DPI px → `fig()`):
-
 | Level | px | Used for |
 |---|---|---|
-| `INTRO_L0 = fig(40)` | 40px | Section headings, "Type X:" label, bullets |
+| `INTRO_L0 = fig(40)` | 40px | Section headings, "Type X:" label |
 | `INTRO_L1 = fig(87)` | 87px | Type description text, Answer label |
-| `_ex_body_x` | dynamic | Body/Solution text when inside Example block |
+| `_ex_body_x` | dynamic | Body/Solution inside Example block |
 
-- **Example label + text body**: both at `INTRO_L1`; `_ex_body_x = INTRO_L1 + label_width + fig(6)`
-- **Letter/Number table**: starts at `_ex_body_x`
-- **ABCD options**: starts at `_ex_body_x`
-- **Body text after an Example block** (`_ex_active = True`): drawn at `_ex_body_x`
-- **Solution**: label + first line via `_inline_label_text` at `_ex_body_x`; continuation lines at `_ex_body_x`
+- **`_ex_active` break condition**: empty line, `_STRUCT_RE` match, or `re.match(r'^[A-Z]{2,10}', nxt)`
+- **Paragraph spacing**: `PARA_GAP = fig(8)` after every block
 - **Answer**: always at `INTRO_L1` (not affected by `_ex_active`)
-- **`_ex_active` flag**: set `True` after Example renders; reset `False` on new Type block
 
-**`_ex_active` break condition in body text loop** — break when next line is:
-- Empty string
-- Matches `_STRUCT_RE` (Type/Section/Example/etc.)
-- Matches `re.match(r'^[A-Z]{2,10}', nxt)` — standalone UPPERCASE sequences (e.g. "ACEG")
+### Inline Styled Text (`**word**` marker)
 
-**Paragraph spacing**: `PARA_GAP = fig(8)` added after every block.
+To render a specific word in Medium weight inside any text, wrap it with `**...**` in content.json:
 
-Typography:
-- Section headings: UntitledSans Medium 14pt UPPERCASE
-- "Type I: Title": UntitledSans Medium 12pt at `INTRO_L0`
-- Description text: UntitledSans Regular 12pt at `INTRO_L1`
-- Example/Answer/Solution labels: UntitledSans Medium 12pt
+```
+"Which word cannot be formed from letters of word **MOTHER**?"
+```
+
+- `_draw_wrapped_styled(y, text, color, x, max_w)` in `generate_g3_page.py` handles this for intro/example text
+- `_draw_wrapped_caps_q(y, text, x, max_w)` in `imo_g3_base.py` handles this for MCQ question text
+
+### Letter/Number Table (`_render_table`)
+
+- **Letter row** (top): header cell = white, value cells = white
+- **Number row** (bottom): header cell = `chapter_table_bg`, value cells = `chapter_table_bg` (filled)
+
+### Standalone Letter Sequence (e.g. "ACEG")
+
+Single box drawn at `_ex_body_x` — **white fill**, chapter border.
 
 ---
 
 ## MCQ Page Layout
 
-### Layout Constants
-
-```python
-LEFT        = fig(40)
-RIGHT_EDGE  = fig(555)
-Q_BADGE_W   = fig(36)
-Q_TEXT_X    = LEFT + Q_BADGE_W + fig(8)
-Q_CONTENT_W = RIGHT_EDGE - Q_TEXT_X
-```
-
 ### Pagination
 
 ```python
-Q_FIRST_PAGE  = 4   # questions on MCQ page 1 (Temp2)
-Q_SECOND_PAGE = 5   # questions on MCQ page 2 (Temp3)
-Q_PER_PAGE    = 7   # questions on MCQ page 3+ (Temp4)
-```
-
-Page assignment logic:
-```python
-chunks, pos, page_idx = [], 0, 0
-while pos < max(len(questions), 1):
-    if page_idx == 0:   size = Q_FIRST_PAGE
-    elif page_idx == 1: size = Q_SECOND_PAGE
-    else:               size = Q_PER_PAGE
-    chunks.append((pos, questions[pos: pos + size]))
-    pos += size
-    page_idx += 1
+Q_FIRST_PAGE  = 4   # MCQ page 1 (Temp2)
+Q_SECOND_PAGE = 5   # MCQ page 2 (Temp3)
+Q_PER_PAGE    = 7   # MCQ page 3+ (Temp4)
 ```
 
 ### Directions Block
 
-`directions_block(y, prefix, rest)` in `imo_g3_base.py`:
+- `prefix` ("Directions (1-5):") → `F["medium"]`, CHARCOAL
+- `rest` (continuation) → `F["direction"]` (Regular), TEXT_DARK
+- Hyphenated line breaks (`let-\nters`) in direction text are stripped before rendering: `re.sub(r'-\n', '', direction)`
 
-- `prefix` (e.g. `"Directions (1-5):"`) → `F["medium"]` (UntitledSans Medium), CHARCOAL color
-- `rest` (continuation text) → `F["direction"]` (UntitledSans Regular), TEXT_DARK color
-- First line of `rest` fits beside prefix on the same line; remaining words word-wrap from LEFT
-- Word-wrap uses `draw.textlength()` to fill each line properly
+### Question Text (`draw_q`)
 
-### Question Badge
-
-```python
-badge_h = _line_h(F["q_text"]) + fig(6)
-bg  = chapter_badge_bg(CH_NUM)   # 300-shade light fill
-bor = chapter_color(CH_NUM)       # 500 accent border
-draw.rounded_rectangle(
-    [LEFT, y, LEFT + Q_BADGE_W, y + badge_h],
-    radius=px(4), fill=(*bg, 255), outline=(*bor, 255), width=max(1, px(0.5)))
-draw.text((LEFT + Q_BADGE_W // 2, y + badge_h // 2),
-          f"{num:02d}.", font=F["q_badge"], fill=(*CHARCOAL, 255), anchor="mm")
-```
+Uses `_draw_wrapped_caps_q` which renders:
+- ALL_CAPS words (2+ chars, e.g. COMFORTABLE, INTERNATIONAL) → `F["medium"]`
+- `**marked**` words → `F["medium"]`
+- Everything else → `F["q_text"]` (Regular)
 
 ### Question Types
 
-| Type | Tiles display | Number row | Used in Ch3 |
+| Type | Tiles display | Number row | Tiles font |
 |---|---|---|---|
-| `letter_tile` | Individual boxes at Q_TEXT_X, same y as badge | Yes (filled bg row below) | Q1–Q5 |
-| `letter_tile_no_nums` | Individual boxes at Q_TEXT_X | No | (reserved) |
-| `letter_plain` | Plain spaced text `"  ".join(tiles)` at Q_TEXT_X, same y as badge | No | Q6–Q16 |
-| `letter_plain_subtext` | Plain tiles on badge line, then subtext below, then options | No | Q17–Q20 |
+| `letter_tile` | Individual boxes, white fill, same y as badge | Yes (filled bg row below) | — |
+| `letter_tile_no_nums` | Individual boxes, white fill, same y as badge | No | — |
+| `letter_plain` | Plain spaced text `"  ".join(tiles)` same y as badge | No | `F["medium"]` |
+| `letter_plain_subtext` | Plain spaced text + subtext below | No | `F["medium"]` |
+| `text_only` | No tiles; only question text + options | — | — |
 
-**`render_letter_tiles(y, tiles, x=None, show_nums=True)`:**
-```python
-cell_w  = fig(32)
-cell_h  = fig(28)
-tx      = x if x is not None else LEFT
-hdr_bg  = chapter_table_bg(CH_NUM)
-bor_col = chapter_table_bor(CH_NUM)
-rows = [(tiles, False)]
-if show_nums:
-    rows.append(([str(i+1) for i in range(len(tiles))], True))
-# Row 0: letter tiles (white fill)
-# Row 1 if show_nums: number row (filled chapter bg)
-rows_drawn = 2 if show_nums else 1
-return y + rows_drawn * cell_h + fig(8)
-```
+**`letter_tile_no_nums` with subtext**: if `q.get("subtext")` is set, it renders below the tile row before options.
 
-**`letter_plain` rendering:**
-```python
-text_str = "  ".join(q["tiles"])
-badge_h  = _lh("body") + fig(6)
-cy       = y + badge_h // 2
-draw.text((Q_TEXT_X, cy), text_str, font=F["body"], fill=(*TEXT_DARK, 255), anchor="lm")
-y += badge_h + fig(4)
-```
-Note: badge is drawn without advancing y — tiles/text start at the same y as the badge top.
+**`letter_plain` tiles use `F["medium"]`** (Medium weight), not `F["body"]`.
 
-**`letter_plain_subtext` rendering:**
-- Same as `letter_plain` for the tiles line
-- Then `subtext` drawn below via `draw_wrapped` at `Q_TEXT_X`
-- Then options follow
+### Per-question Content Fields
 
-**Badge-only render (no tiles, no text):**
-```python
-badge_h = _line_h(F["q_text"]) + fig(6)
-# draw badge only — do NOT advance y; tiles start at same y as badge
-```
+| Field | Type | Effect |
+|---|---|---|
+| `options_layout` | `"2col"` / `"1row"` / `"auto"` | Override options layout (default: auto) |
+| `tiles_gap` | int (Figma px) | Extra gap between tiles and options: `y += fig(tiles_gap)` |
+| `subtext` | string | Text rendered below tiles, above options |
 
 ### ABCD Options
 
-**Checkbox style** (`_draw_single_opt`):
-```python
-_OPT_BOX     = fig(20)
-_OPT_NEUTRAL = (151, 147, 140)   # neutral-500 #97938C
-# Rounded rectangle: white fill, neutral border
-# Label (A/B/C/D) centered inside box in _OPT_NEUTRAL
-# Option text to the right in TEXT_DARK
-```
+- `_OPT_BOX = fig(20)` — checkbox size
+- `_OPT_NEUTRAL = (151, 147, 140)` — neutral-500 border + label color
+- **2-col** (`options_2col`): `row_h = _OPT_BOX + fig(4)`
+- **4-col** (`_options_row`): `row_h = _OPT_BOX + fig(10)`
+- **auto** (`options_auto`): uses `_fits_row()` to choose 4-col or 2-col
 
-**2-column layout** (`options_2col`):
-```python
-col_w  = Q_CONTENT_W // 2
-row_h  = _OPT_BOX + fig(4)   # 4px gap between rows
-```
-
-**4-column layout** (`_options_row`):
-```python
-col_w  = Q_CONTENT_W // 4
-row_h  = _OPT_BOX + fig(10)
-```
-
-### Separator Between Questions
+### Separator
 
 ```python
 y = separator(y, gap_before=fig(12), gap_after=fig(24))
-# Line: fill=(*CHARCOAL, 80), width=max(1, px(0.75))
+# fill=(*CHARCOAL, 80), width=max(1, px(0.75))
 ```
 
 ---
@@ -333,26 +240,38 @@ y = separator(y, gap_before=fig(12), gap_after=fig(24))
     "chapter_name": "Alphabet Test",
     "sections": [
       { "type": "intro", "text": "...", "source_pages": [32, 33] },
-      { "type": "mcq", "questions": [...] }
+      { "type": "mcq", "questions": [...] },
+      { "type": "assessment", "questions": [...] }
     ]
   }]
 }
 ```
 
-Intro text split at "Type III:" boundary:
-- Part 1 (Type I + II) → intro page 1 → **Temp1**
-- Part 2 (Type III + IV) → intro page 2 → **Temp3**
-
-### Ch3 Question Type Map
+### Ch3 MCQ Question Type Map
 
 | Q# | type | tiles | text | subtext |
 |---|---|---|---|---|
 | Q1–Q5 | `letter_tile` | letters | question text | — |
-| Q6–Q7 | `letter_plain` | letters | `""` | — |
+| Q6–Q7 | `letter_tile_no_nums` | letters | `""` | — |
 | Q8–Q9 | `letter_plain` | letters | `""` | — |
 | Q10–Q14 | `letter_plain` | letters | `""` | — |
 | Q15–Q16 | `letter_plain` | letters | question text | — |
-| Q17–Q20 | `letter_plain_subtext` | letters | `""` | `"The word formed belongs to:"` |
+| Q17–Q20 | `letter_tile_no_nums` | letters | `""` | `"The word formed belongs to:"` |
+
+### Ch3 Assessment Question Type Map
+
+| Q# | type | notes |
+|---|---|---|
+| Q1–Q2 | `text_only` | plain question text |
+| Q3 | `letter_tile` | tiles + options_layout=2col |
+| Q4 | `text_only` | options_layout=2col |
+| Q5 | `text_only` | EDUCATION embedded as `**EDUCATION**` in text |
+| Q6 | `letter_tile` | tiles + question text |
+| Q7 | `text_only` | plain |
+| Q8 | `text_only` | KITCHEN embedded as `**KITCHEN**` in text |
+| Q9 | `text_only` | plain |
+| Q10–Q14 | `letter_plain` | word tiles (EXPERIMENTAL etc.), no text |
+| Q15 | `letter_tile_no_nums` | tiles + text + subtext "The word formed belongs to:" |
 
 ---
 
@@ -360,41 +279,45 @@ Intro text split at "Type III:" boundary:
 
 - **cairosvg**: fails (`OSError: cairo native library not found` due to SIP). Do not use.
 - **SVG → PNG**: use `rsvg-convert -z 4 --background-color none` (requires `brew install librsvg`).
-- **F dict import**: always access fonts via `_b.F["key"]` in `generate_g3_page.py` — never import `F` directly (empty before `setup()` runs).
-- **PDF caching in Preview**: macOS Preview caches PDFs. Always open with **Adobe Acrobat DC** to see updates.
+- **F dict import**: always access via `_b.F["key"]` in `generate_g3_page.py` — never import `F` directly.
+- **PDF caching in Preview**: macOS Preview caches PDFs. Always open with **Adobe Acrobat DC**.
+- **Word breaks in source text**: strip hyphenated line breaks with `re.sub(r'-\n', '', text)` before rendering.
 
 ---
 
-## Output Structure
+## Output Structure (Ch3)
 
 ```
-personal/workspace/pdf-gen/
-└── ch<N>/
-    ├── content.json
-    ├── page-001.pdf     ← Temp1 (intro pg 1)
-    ├── page-002.pdf     ← Temp3 (intro pg 2)
-    ├── page-003.pdf     ← Temp2 (MCQ first page, Q1–Q4)
-    ├── page-004.pdf     ← Temp3 (MCQ page 2, Q5–Q9)
-    ├── page-005.pdf     ← Temp4 (MCQ page 3, Q10–Q16)
-    ├── page-006.pdf     ← Temp4 (MCQ page 4, Q17–Q20)
-    └── chapter-<N>.pdf  ← merged final
+personal/workspace/pdf-gen/ch3/
+├── content.json
+├── page-001.pdf     ← Temp1 (intro pg 1)
+├── page-002.pdf     ← Temp3 (intro pg 2)
+├── page-003.pdf     ← Temp2 (MCQ Q1–Q4)
+├── page-004.pdf     ← Temp3 (MCQ Q5–Q9)
+├── page-005.pdf     ← Temp4 (MCQ Q10–Q16)
+├── page-006.pdf     ← Temp4 (MCQ Q17–Q20)
+├── page-007.pdf     ← Temp2 (Assessment Q1–Q4)
+├── page-008.pdf     ← Temp3 (Assessment Q5–Q9)
+├── page-009.pdf     ← Temp4 (Assessment Q10–Q15)
+└── chapter-3.pdf   ← merged final
 ```
 
 ---
 
 ## Chapter Map (IMO LR G3)
 
-| Key | Chapter | Source pages (printed) |
+| Key | Chapter | Source PDF pages |
 |---|---|---|
 | 3 | Alphabet Test | 27–42 |
+| 4 | Number Coding | 43+ |
 
 ---
 
 ## Handling Feedback
 
-- **Layout** (spacing, overflow) → adjust constants/spacing in `generate_g3_page.py`
-- **Content** (wrong text) → fix `content.json` or extraction script
-- **Style** (color, font, alignment) → update draw functions in `generate_g3_page.py` or `imo_g3_base.py`
-- **Template** (wrong header) → fix `render_page()` logic in `generate_g3_page.py`
+- **Layout** (spacing, overflow) → adjust constants in `generate_g3_page.py`
+- **Content** (wrong text, wrong type) → fix `content.json`
+- **Style** (color, font, alignment) → `generate_g3_page.py` or `imo_g3_base.py`
+- **Template** (wrong header) → fix `render_page()` in `generate_g3_page.py`
 
-Always regenerate the **same page** after a fix. Do not move to next page until user confirms.
+Always regenerate the same page after a fix. Do not move to next page until user confirms.
