@@ -1,0 +1,784 @@
+{
+  "book_title": "IMO Logical Reasoning Grade 3",
+  "chapters": [
+    {
+      "chapter_key": "3",
+      "chapter_name": "Alphabet Test",
+      "start_page": 33,
+      "end_page": 40,
+      "sections": [
+        {
+          "type": "intro",
+          "text": "Introduction\nAlphabet Test questions are based on the positions and arrangements of\nletters in the English alphabet series. They test a child’s ability to:\ny Recognise letter positions (forward & backward order).\ny Rearrange letters to form meaningful words.\ny Identify patterns and skipped letters.\ny Pick the correct options based on the given clues.\nTypes of Alphabet Test\nType I: Arrange letters to form a meaningful word\nUse the given numbers (representing letters) to rearrange into\na meaningful word.\nExample 1: Form a meaningful word by arranging the given numbers corre-\nsponding to the letters below.\nLetter S E T B\nNumber 1 2 3 4\n(A) 4, 1, 3, 2 (B) 4, 2, 1, 3 (C) 4, 3, 2, 1 (D) 2, 4, 1, 3\nAnswer: (B) BEST\nType II: Word formation from given letters\nCheck if an option word can or cannot be formed from the given letters.\nExample 2: Which word cannot be formed from letters of word MOTHER?\n(A) OTHER (B) MORE (C) THEM (D) TOWER\nAnswer: (D) TOWER\n\nType III: Form a meaningful word from jumbled letters\nArrange the given jumbled letters to form a real word.\nExample 3: Form a meaningful word by arranging the given numbers corre-\nsponding to the letters below.\nJumbled letters: E T A B L\nCorrect word = T A B L E\nAnswer: TABLE\nType IV: Identify skipped-letter patterns\nFind the options where letters follow the same number of skips as the given\nletter sequence.\nExample 4: Check the sequence.\nACEG\nIn which of the following sequences, the number of letters skipped between\ntwo adjacent letters is the same as the given sequence?\n(A) PQRS (B) MPRU (C) HJLN (D) OMKI\nSolution: In given Sequence ACEG, each letter skips 1 letter (B, D, F).\nSo the pattern is to skip by 1.\nSequence HJLN also follows same rule.\nAnswer: (C) HJLN",
+          "questions": []
+        },
+        {
+          "type": "mcq",
+          "questions": [
+            {
+              "num": "01",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "G",
+                "T",
+                "O",
+                "U",
+                "H",
+                "H",
+                "T"
+              ],
+              "options": {
+                "A": "7, 5, 3, 4, 1, 6, 2",
+                "B": "7, 3, 4, 5, 6, 1, 2",
+                "C": "3, 4, 7, 6, 2, 5, 1",
+                "D": "7, 3, 6, 5, 4, 2, 1"
+              },
+              "answer": "",
+              "direction": "Directions (1-5): Find the meaningful combination of numbers so that let-\nters are arranged accordingly to form a meaningful word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "02",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "S",
+                "T",
+                "O",
+                "R",
+                "E",
+                "G",
+                "N",
+                "R"
+              ],
+              "options": {
+                "A": "1, 2, 3, 7, 5, 6, 4, 8",
+                "B": "3, 4, 5, 6, 7, 8, 1, 2",
+                "C": "1, 2, 4, 3, 7, 6, 5, 8",
+                "D": "2, 4, 5, 6, 7, 3, 8, 1"
+              },
+              "answer": "",
+              "direction": "Directions (1-5): Find the meaningful combination of numbers so that let-\nters are arranged accordingly to form a meaningful word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "03",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "N",
+                "E",
+                "A",
+                "S",
+                "T",
+                "L",
+                "P"
+              ],
+              "options": {
+                "A": "7, 1, 5, 2, 3, 6, 4",
+                "B": "7, 6, 3, 1, 2, 5, 4",
+                "C": "1, 6, 3, 2, 7, 5, 4",
+                "D": "4, 5, 7, 6, 2, 3, 1"
+              },
+              "answer": "",
+              "direction": "Directions (1-5): Find the meaningful combination of numbers so that let-\nters are arranged accordingly to form a meaningful word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "04",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "T",
+                "R",
+                "E",
+                "E",
+                "C",
+                "A",
+                "R",
+                "U"
+              ],
+              "options": {
+                "A": "5, 2, 4, 1, 6, 8, 7, 3",
+                "B": "3, 7, 2, 4, 1, 5, 6, 8",
+                "C": "5, 7, 3, 6, 1, 8, 2, 4",
+                "D": "1, 3, 2, 4, 5, 8, 7, 6"
+              },
+              "answer": "",
+              "direction": "Directions (1-5): Find the meaningful combination of numbers so that let-\nters are arranged accordingly to form a meaningful word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "05",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "Y",
+                "R",
+                "I",
+                "E",
+                "N",
+                "D",
+                "L",
+                "F"
+              ],
+              "options": {
+                "A": "8, 3, 2, 4, 5, 6, 7, 1",
+                "B": "8, 2, 3, 4, 5, 6, 7, 1",
+                "C": "7, 2, 3, 4, 5, 6, 1, 8",
+                "D": "8, 2, 3, 4, 6, 5, 7, 1"
+              },
+              "answer": "",
+              "direction": "Directions (1-5): Find the meaningful combination of numbers so that let-\nters are arranged accordingly to form a meaningful word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "06",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "P",
+                "E",
+                "L",
+                "A",
+                "P"
+              ],
+              "options": {
+                "A": "Animal",
+                "B": "Fruit",
+                "C": "Vehicle",
+                "D": "Color"
+              },
+              "answer": "",
+              "direction": "Directions (6-7): Form the word using the given letters and find the catego-\nry in which they belong.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "07",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "E",
+                "S",
+                "U",
+                "O",
+                "M"
+              ],
+              "options": {
+                "A": "Bird",
+                "B": "Insect",
+                "C": "Animal",
+                "D": "Fish"
+              },
+              "answer": "",
+              "direction": "Directions (6-7): Form the word using the given letters and find the catego-\nry in which they belong.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "08",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "T",
+                "E",
+                "A",
+                "C",
+                "H",
+                "E",
+                "R"
+              ],
+              "options": {
+                "A": "BEACH",
+                "B": "HEALTH",
+                "C": "HEARD",
+                "D": "TRACE"
+              },
+              "answer": "",
+              "direction": "Directions (8-9): In each of the following questions, choose one word\nwhich CAN be formed from the letters of the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "09",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "F",
+                "E",
+                "S",
+                "T",
+                "I",
+                "V",
+                "A",
+                "L"
+              ],
+              "options": {
+                "A": "VITAL",
+                "B": "SILVER",
+                "C": "FASTER",
+                "D": "LISTEN"
+              },
+              "answer": "",
+              "direction": "Directions (8-9): In each of the following questions, choose one word\nwhich CAN be formed from the letters of the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "10",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "I",
+                "M",
+                "A",
+                "G",
+                "I",
+                "N",
+                "A",
+                "T",
+                "I",
+                "O",
+                "N"
+              ],
+              "options": {
+                "A": "MANGO",
+                "B": "NATION",
+                "C": "MAGIC",
+                "D": "AGAIN"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "11",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "C",
+                "E",
+                "L",
+                "E",
+                "B",
+                "R",
+                "A",
+                "T",
+                "I",
+                "O",
+                "N"
+              ],
+              "options": {
+                "A": "CREATION",
+                "B": "BRACES",
+                "C": "CABLE",
+                "D": "REBEL"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "12",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "W",
+                "O",
+                "N",
+                "D",
+                "E",
+                "R",
+                "F",
+                "U",
+                "L"
+              ],
+              "options": {
+                "A": "FLOWER",
+                "B": "UNDER",
+                "C": "FOUND",
+                "D": "WORLDLY"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "13",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "T",
+                "R",
+                "A",
+                "N",
+                "S",
+                "P",
+                "O",
+                "R",
+                "T",
+                "A",
+                "T",
+                "I",
+                "O",
+                "N"
+              ],
+              "options": {
+                "A": "STATION",
+                "B": "PORTION",
+                "C": "PAINTER",
+                "D": "RATION"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "14",
+              "text": "",
+              "type": "letter_tile",
+              "tiles": [
+                "D",
+                "I",
+                "C",
+                "T",
+                "I",
+                "O",
+                "N",
+                "A",
+                "R",
+                "Y"
+              ],
+              "options": {
+                "A": "DAIRY",
+                "B": "CANDY",
+                "C": "STORY",
+                "D": "ACTION"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "15",
+              "text": "Which series has an equal number of letters skipped between each\npair?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "B E H K N",
+                "B": "C F J N R",
+                "C": "A D G I M",
+                "D": "D G K O S"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "16",
+              "text": "Which series follows the pattern of skipping 3 letters between\nadjacent letters?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "A E J M Q",
+                "B": "B F K N R",
+                "C": "C G L O S",
+                "D": "D H L P T"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Find the word that CANNOT be formed from the letters\nof the given word.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "17",
+              "text": "The word formed belongs to:",
+              "type": "letter_tile",
+              "tiles": [
+                "C",
+                "O",
+                "E",
+                "N",
+                "A",
+                "S"
+              ],
+              "options": {
+                "A": "Lakes",
+                "B": "Large water bodies",
+                "C": "Rivers",
+                "D": "Ponds"
+              },
+              "answer": "",
+              "direction": "Directions (17-20): Form meaningful words from given letters and identify\nthe category.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "18",
+              "text": "The word formed belongs to:",
+              "type": "letter_tile",
+              "tiles": [
+                "S",
+                "T",
+                "G",
+                "I",
+                "R",
+                "E"
+              ],
+              "options": {
+                "A": "Birds",
+                "B": "Reptiles",
+                "C": "Wild cats",
+                "D": "Domestic animals"
+              },
+              "answer": "",
+              "direction": "Directions (17-20): Form meaningful words from given letters and identify\nthe category.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "19",
+              "text": "The word formed belongs to:",
+              "type": "letter_tile",
+              "tiles": [
+                "L",
+                "A",
+                "P",
+                "T",
+                "N",
+                "S"
+              ],
+              "options": {
+                "A": "Animals",
+                "B": "Living organisms that make food",
+                "C": "Non-living things",
+                "D": "Minerals"
+              },
+              "answer": "",
+              "direction": "Directions (17-20): Form meaningful words from given letters and identify\nthe category.",
+              "section": "mcq",
+              "source_page": null
+            },
+            {
+              "num": "20",
+              "text": "The word formed belongs to:",
+              "type": "letter_tile",
+              "tiles": [
+                "W",
+                "T",
+                "I",
+                "R",
+                "E",
+                "N"
+              ],
+              "options": {
+                "A": "Months",
+                "B": "Days",
+                "C": "Seasons",
+                "D": "Years"
+              },
+              "answer": "",
+              "direction": "Directions (17-20): Form meaningful words from given letters and identify\nthe category.",
+              "section": "mcq",
+              "source_page": null
+            }
+          ]
+        },
+        {
+          "type": "assessment",
+          "questions": [
+            {
+              "num": "01",
+              "text": "Using letters from the word COMFORTABLE, which two words cannot\nbe formed?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "CRAFT and BLOOM",
+                "B": "TABLES and FORCE",
+                "C": "BLAME and ACTOR",
+                "D": "TRACE and BLOOM"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "02",
+              "text": "Which word can be formed from the letters of the word\nINTERNATIONAL?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "RELATED",
+                "B": "NATIONAL",
+                "C": "INTERNALLY",
+                "D": "All of the above"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "03",
+              "text": "Select the combination of numbers, so that letters are arranged\naccordingly to form a meaningful English word.",
+              "type": "letter_tile",
+              "tiles": [
+                "P",
+                "C",
+                "M",
+                "U",
+                "T",
+                "O",
+                "R",
+                "E"
+              ],
+              "options": {
+                "A": "2,6,3,1, 4,5,8,7",
+                "B": "2,3,4,5,6,7,8,1",
+                "C": "3,2,1,4,5,6,7,8",
+                "D": "2,6,1,3,4,5,7,8"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "04",
+              "text": "Which of the following words can be formed from the letters of the\ngiven word?\nMATHEMATICAL",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "MACHINE",
+                "B": "MAGNET",
+                "C": "MIRACLE",
+                "D": "CLIMATE"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "05",
+              "text": "Which of the following words can be formed from the letters of the\ngiven word?",
+              "type": "letter_tile",
+              "tiles": [
+                "E",
+                "D",
+                "U",
+                "C",
+                "A",
+                "T",
+                "I",
+                "O",
+                "N"
+              ],
+              "options": {
+                "A": "CAUTION",
+                "B": "EDUCATE",
+                "C": "TRACE",
+                "D": "CREATE"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "06",
+              "text": "Select the combination of numbers, so that letters are arranged\naccordingly to form a meaningful English word.",
+              "type": "letter_tile",
+              "tiles": [
+                "T",
+                "R",
+                "A",
+                "K",
+                "E",
+                "B",
+                "S",
+                "A",
+                "F"
+              ],
+              "options": {
+                "A": "625349871",
+                "B": "635249871",
+                "C": "251678934",
+                "D": "562748391"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "07",
+              "text": "Which of the following words can be formed using the letters of the\nword SCIENTIFIC?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "Craft",
+                "B": "Scene",
+                "C": "Fancy",
+                "D": "Cites"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "08",
+              "text": "Find the word that cannot be made from the letters of the given word.\nKITCHEN",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "THINK",
+                "B": "THICK",
+                "C": "THEN",
+                "D": "NIGHT"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "09",
+              "text": "Which of the following letters appear twice in the word\nPHOTOGRAPH?",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "P, H, O",
+                "B": "P, H, G",
+                "C": "H, O, T",
+                "D": "P, O, G"
+              },
+              "answer": "",
+              "direction": "",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "10",
+              "text": "EXPERIMENTAL",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "EXTERNALLY",
+                "B": "IMPLANTER",
+                "C": "EXPERT",
+                "D": "PARENT"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "11",
+              "text": "ORGANIZATION",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "RATION",
+                "B": "GRANT",
+                "C": "ORIGIN",
+                "D": "NATIONS"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "12",
+              "text": "MAGNIFICENT",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "MAGNETIC",
+                "B": "FINANCE",
+                "C": "FIGMENTS",
+                "D": "ANCIENT"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "13",
+              "text": "DEVELOPMENT",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "NOTED",
+                "B": "TEMPLE",
+                "C": "DEPEND",
+                "D": "ELEMENT"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "14",
+              "text": "TEMPERATURE",
+              "type": "text_only",
+              "tiles": [],
+              "options": {
+                "A": "TRUMPET",
+                "B": "MATURED",
+                "C": "TEMPER",
+                "D": "REPEAT"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            },
+            {
+              "num": "15",
+              "text": "Form a meaningful word from the given letters and identify the\ncategory.\nThe word formed belongs to:",
+              "type": "letter_tile",
+              "tiles": [
+                "V",
+                "I",
+                "R",
+                "S",
+                "R",
+                "E"
+              ],
+              "options": {
+                "A": "Body of water",
+                "B": "Mountain ranges",
+                "C": "Countries",
+                "D": "Cities"
+              },
+              "answer": "",
+              "direction": "Directions (10-14): Choose the word that cannot be formed using the\nletters of the given word.",
+              "section": "assessment",
+              "source_page": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

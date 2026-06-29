@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PDF Gen — Font Size Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #F0F4F8; padding: 32px; color: #292827; }
+
+  h1 { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #0055CC; }
+  .subtitle { font-size: 12px; color: #5B5854; margin-bottom: 28px; }
+
+  /* A4-proportioned page preview */
+  .page {
+    width: 595px;
+    min-height: 842px;
+    background: #FFF4F4;
+    position: relative;
+    margin: 0 auto 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  /* Callout bubble */
+  .callout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #0055CC;
+    color: white;
+    font-size: 8px;
+    font-weight: 700;
+    position: absolute;
+    z-index: 10;
+    cursor: default;
+  }
+  .callout:hover .tooltip { display: block; }
+  .tooltip {
+    display: none;
+    position: absolute;
+    left: 20px; top: -4px;
+    background: #0055CC;
+    color: white;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  /* ── Page elements ── */
+  .header {
+    background: #F97279;
+    height: 52px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 8px 40px;
+    position: relative;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 2px; }
+  .header-chapter { font-size: 8px; color: white; font-weight: 400; }
+  .header-section  { font-size: 18px; color: white; font-weight: 900; line-height: 1.1; }
+  .header-logo { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
+  .logo-name { font-size: 11px; font-weight: 900; color: white; letter-spacing: 1px; }
+  .logo-tag  { font-size: 6.5px; color: white; opacity: 0.9; }
+
+  .body { padding: 16px 40px 60px; }
+
+  .directions {
+    font-size: 9.5px;
+    color: #292827;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .directions strong { font-weight: 700; }
+
+  .question-block {
+    margin-bottom: 14px;
+    border-bottom: 1px solid #FFD6D5;
+    padding-bottom: 10px;
+    position: relative;
+  }
+  .q-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .q-badge {
+    min-width: 18px; height: 18px;
+    background: #FFD6D5;
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    color: #292827;
+    flex-shrink: 0;
+  }
+  .q-text { font-size: 9.5px; color: #292827; line-height: 1.5; }
+
+  .tiles-row { display: flex; gap: 4px; margin: 6px 0 2px 26px; }
+  .tile {
+    width: 22px; height: 22px;
+    border: 1px solid #FFB8B7;
+    border-radius: 3px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #292827;
+  }
+  .tile-num {
+    background: #FFF4F4;
+    font-weight: 400;
+    color: #FFD6D5;
+    font-size: 10px;
+  }
+
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin: 8px 0 0 26px; }
+  .option { display: flex; align-items: center; gap: 6px; }
+  .opt-badge {
+    min-width: 14px; height: 14px;
+    border: 1px solid #FFB8B7;
+    border-radius: 2px;
+    font-size: 9.5px;
+    display: flex; align-items: center; justify-content: center;
+    color: #292827;
+    background: white;
+  }
+  .opt-text { font-size: 9.5px; color: #292827; }
+
+  .page-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 32px;
+    border-top: 1px solid #FFD6D5;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+  }
+  .footer-text { font-size: 7.5px; color: #84807B; }
+
+  /* ── Legend ── */
+  .legend {
+    width: 595px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #C6C0B8;
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+  .legend h2 { font-size: 13px; font-weight: 700; color: #0055CC; margin-bottom: 14px; border-bottom: 1px solid #EBE7E0; padding-bottom: 8px; }
+  .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+  .legend-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 4px; background: #EEF4FF; }
+  .leg-num {
+    width: 18px; height: 18px; border-radius: 50%; background: #0055CC;
+    color: white; font-size: 9px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .leg-info { display: flex; flex-direction: column; }
+  .leg-name { font-size: 11px; font-weight: 600; color: #292827; }
+  .leg-size { font-size: 10px; color: #0055CC; }
+
+  /* highlight on hover */
+  .callout:hover { transform: scale(1.2); }
+</style>
+</head>
+<body>
+
+<h1>PDF Gen — Font Size Reference</h1>
+<p class="subtitle">Hover over the blue circles to see element details. See the legend below.</p>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <span class="header-chapter">Chapter 3: Alphabet Test</span>
+      <span class="header-section">Multiple Choice Questions</span>
+    </div>
+    <div class="header-logo">
+      <span class="logo-name">CUEMATH</span>
+      <span class="logo-tag">Making Kids MathFit™</span>
+    </div>
+
+    <!-- Callouts on header -->
+    <div class="callout" style="top:10px; left:175px;">1<span class="tooltip">① Header Chapter Name — 8pt Regular</span></div>
+    <div class="callout" style="top:26px; left:175px;">2<span class="tooltip">② Section Title — 18pt Display (Black)</span></div>
+    <div class="callout" style="top:10px; right:8px;">3<span class="tooltip">③ Logo Name — 11pt Bold</span></div>
+    <div class="callout" style="top:26px; right:8px;">4<span class="tooltip">④ Logo Tagline — 6.5pt Regular</span></div>
+  </div>
+
+  <div class="body">
+
+    <!-- Directions -->
+    <div class="directions" style="position:relative;">
+      <strong>Directions (1–5):</strong> Find the meaningful combination of numbers so that letters are arranged accordingly to form a meaningful word.
+      <div class="callout" style="top:-4px; right:-16px;">5<span class="tooltip">⑤ Directions Text — 9.5pt Regular</span></div>
+    </div>
+
+    <!-- Question 1 -->
+    <div class="question-block">
+      <div class="q-row">
+        <div class="q-badge" style="position:relative;">
+          01
+          <div class="callout" style="top:-8px; right:-20px; z-index:11;">6<span class="tooltip">⑥ Question Badge — 8pt Bold</span></div>
+        </div>
+        <div class="q-text" style="position:relative;">
+          Which word can be formed from the letters of TEACHER?
+          <div class="callout" style="top:-4px; right:-28px;">7<span class="tooltip">⑦ Question Text — 9.5pt Regular</span></div>
+        </div>
+      </div>
+      <div class="tiles-row" style="position:relative;">
+        <div class="tile">T</div><div class="tile">E</div><div class="tile">A</div>
+        <div class="tile">C</div><div class="tile">H</div><div class="tile">E</div><div class="tile">R</div>
+        <div class="callout" style="top:2px; left:172px;">8<span class="tooltip">⑧ Letter Tile — 10pt Bold</span></div>
+      </div>
+      <div class="tiles-row" style="position:relative;">
+        <div class="tile tile-num">1</div><div class="tile tile-num">2</div>
+        <div class="tile tile-num">3</div><div class="tile tile-num">4</div>
+        <div class="tile tile-num">5</div><div class="tile tile-num">6</div>
+        <div class="tile tile-num">7</div>
+        <div class="callout" style="top:2px; left:172px;">9<span class="tooltip">⑨ Tile Number — 10pt Regular</span></div>
+      </div>
+      <div class="options-grid" style="position:relative;">
+        <div class="option"><div class="opt-badge">A</div><span class="opt-text">BEACH</span></div>
+        <div class="option"><div class="opt-badge">B</div><span class="opt-text">HEALTH</span></div>
+        <div class="option"><div class="opt-badge">C</div><span class="opt-text">HEARD</span></div>
+        <div class="option"><div class="opt-badge">D</div><span class="opt-text">TRACE</span></div>
+        <div class="callout" style="bottom:-2px; right:-28px;">10<span class="tooltip">⑩ Option Text — 9.5pt Regular</span></div>
+      </div>
+    </div>
+
+    <!-- Question 2 (text only) -->
+    <div class="question-block">
+      <div class="q-row">
+        <div class="q-badge">02</div>
+        <div class="q-text">Which word CANNOT be formed from the letters of INTERNATIONAL?</div>
+      </div>
+      <div class="options-grid">
+        <div class="option"><div class="opt-badge">A</div><span class="opt-text">RELATED</span></div>
+        <div class="option"><div class="opt-badge">B</div><span class="opt-text">NATIONAL</span></div>
+        <div class="option"><div class="opt-badge">C</div><span class="opt-text">INTERNALLY</span></div>
+        <div class="option"><div class="opt-badge">D</div><span class="opt-text">All of the above</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span class="footer-text" style="position:relative;">
+      © Cue Learn Pvt. Ltd.
+      <span class="callout" style="top:-4px; left:88px;">11<span class="tooltip">⑪ Footer Text — 7.5pt Regular</span></span>
+    </span>
+    <span class="footer-text">2</span>
+    <span class="footer-text">Grade 3: Logical Reasoning</span>
+  </div>
+
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <h2>Legend — All Elements</h2>
+  <div class="legend-grid">
+    <div class="legend-row"><div class="leg-num">1</div><div class="leg-info"><span class="leg-name">Header Chapter Name</span><span class="leg-size">8pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">2</div><div class="leg-info"><span class="leg-name">Section Title</span><span class="leg-size">18pt Display (Black)</span></div></div>
+    <div class="legend-row"><div class="leg-num">3</div><div class="leg-info"><span class="leg-name">Logo Name</span><span class="leg-size">11pt Bold</span></div></div>
+    <div class="legend-row"><div class="leg-num">4</div><div class="leg-info"><span class="leg-name">Logo Tagline</span><span class="leg-size">6.5pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">5</div><div class="leg-info"><span class="leg-name">Directions Text</span><span class="leg-size">9.5pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">6</div><div class="leg-info"><span class="leg-name">Question Badge</span><span class="leg-size">8pt Bold</span></div></div>
+    <div class="legend-row"><div class="leg-num">7</div><div class="leg-info"><span class="leg-name">Question Text</span><span class="leg-size">9.5pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">8</div><div class="leg-info"><span class="leg-name">Letter Tile</span><span class="leg-size">10pt Bold</span></div></div>
+    <div class="legend-row"><div class="leg-num">9</div><div class="leg-info"><span class="leg-name">Tile Number</span><span class="leg-size">10pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">10</div><div class="leg-info"><span class="leg-name">Option Text</span><span class="leg-size">9.5pt Regular</span></div></div>
+    <div class="legend-row"><div class="leg-num">11</div><div class="leg-info"><span class="leg-name">Footer Text</span><span class="leg-size">7.5pt Regular</span></div></div>
+  </div>
+</div>
+
+</body>
+</html>
