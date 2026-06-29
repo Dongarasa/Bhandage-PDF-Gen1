@@ -35,7 +35,7 @@ from imo_g3_base import (
     CHARCOAL, TEXT_DARK, WARM_GREY, MED_GREY, WHITE, BG_PAGE,
     setup, finish,
     temp1_header, temp2_header, temp3_header, temp4_header,
-    draw_q, draw_wrapped, separator,
+    draw_q, draw_wrapped, separator, directions_block,
     options_auto, options_2col, options_vertical,
 )
 # F must always be accessed via _b.F — importing it directly gives a stale empty dict
@@ -117,6 +117,8 @@ def build_page_plan(chapter_data):
 #   Example label   : UntitledSans Medium 12pt             (F["medium"])
 # ─────────────────────────────────────────────────────────────────────────────
 
+PARA_GAP = fig(8)
+
 _STRUCT_RE = re.compile(
     r'^(Introduction$|Types of |Type [IVX]+:|Example \d+:?|'
     r'Answer:|Solution:|Jumbled letters:|Correct word|y |\(A\)|Letter |Number )')
@@ -179,7 +181,24 @@ def _parse_table_line(line):
     m = re.match(r'^(Letter|Number|Jumbled letters)\s*:?\s*(.+)$', line.strip())
     if not m:
         return None
-    return m.group(1).split()[0], m.group(2).split()
+    return m.group(1), m.group(2).split()
+
+
+def _render_char_boxes(y, chars, x=None, filled=False):
+    """Render characters as individual cells. filled=True uses chapter table bg (like header cells)."""
+    cell_w  = fig(32)
+    cell_h  = fig(28)
+    tx      = x if x is not None else INTRO_L1
+    bor_col = _b.chapter_table_bor(_b.CH_NUM)
+    fill_c  = _b.chapter_table_bg(_b.CH_NUM) if filled else WHITE
+
+    for i, ch in enumerate(chars):
+        bx = tx + i * cell_w
+        _b.draw.rectangle([bx, y, bx + cell_w, y + cell_h],
+                          fill=(*fill_c, 255), outline=(*bor_col, 255), width=max(1, px(0.5)))
+        _b.draw.text((bx + cell_w // 2, y + cell_h // 2), ch,
+                     font=_b.F["body"], fill=(*TEXT_DARK, 255), anchor="mm")
+    return y + cell_h + fig(8)
 
 
 def _render_table(y, letters, numbers, x=None):
@@ -266,6 +285,7 @@ def render_intro(y, text, ch_num, ch_name):
     bullet_count = 0
     type_count   = 0   # to insert divider before 2nd+ Type block
     _ex_body_x   = INTRO_L1  # x where Example text body starts (updated per Example line)
+    _ex_active   = False      # True after an Example line — body text aligns at _ex_body_x
 
     while i < len(lines):
         raw  = lines[i].rstrip()
@@ -309,11 +329,12 @@ def render_intro(y, text, ch_num, ch_name):
                     j += 1
                 else:
                     break
+            _ex_active = False
             # Both label and title in same "medium" font (Figma spec)
             full_line = type_label + " " + type_title
             y = draw_wrapped(y, full_line, _b.F["medium"], CHARCOAL,
                              x=INTRO_L0, max_w=RIGHT_EDGE - INTRO_L0, line_gap=fig(5))
-            y += fig(4)
+            y += PARA_GAP
             i = j
             continue
 
@@ -333,7 +354,7 @@ def render_intro(y, text, ch_num, ch_name):
                 j += 1
             y = draw_wrapped(y, desc, _b.F["body"], TEXT_DARK,
                              x=INTRO_L1, max_w=RIGHT_EDGE - INTRO_L1, line_gap=fig(5))
-            y += fig(4)
+            y += PARA_GAP
             i = j
             continue
 
@@ -347,7 +368,7 @@ def render_intro(y, text, ch_num, ch_name):
             j        = i + 1
             while j < len(lines):
                 nxt = lines[j].strip()
-                if not nxt or _STRUCT_RE.match(nxt):
+                if not nxt or _STRUCT_RE.match(nxt) or re.match(r'^[A-Z]{2,10}$', nxt):
                     break
                 if ex_text.endswith("-"):
                     ex_text = ex_text[:-1] + nxt
@@ -356,6 +377,8 @@ def render_intro(y, text, ch_num, ch_name):
                 j += 1
             avail = RIGHT_EDGE - INTRO_L1
             y = _inline_label_text(y, INTRO_L1, ex_label, ex_text, avail)
+            y += PARA_GAP
+            _ex_active = True
             i = j
             continue
 
@@ -373,16 +396,33 @@ def render_intro(y, text, ch_num, ch_name):
                 y = _render_table(y, letters, numbers, x=_ex_body_x)
                 i += 2
             else:
-                # "Jumbled letters: E T A B L" — render as body at L2
-                y = draw_wrapped(y, line, _b.F["body"], TEXT_DARK,
-                                 x=INTRO_L2, max_w=RIGHT_EDGE - INTRO_L2, line_gap=fig(4))
+                # "Jumbled letters: E T A B L" → label + individual char boxes on same line
+                label = hdr1 + ":"   # "Jumbled letters:"
+                lw    = int(_b.draw.textlength(label, font=_b.F["medium"]))
+                cy    = y + fig(28) // 2
+                _b.draw.text((_ex_body_x, cy), label,
+                             font=_b.F["medium"], fill=(*CHARCOAL, 255), anchor="lm")
+                chars_x = _ex_body_x + lw + fig(10)
+                chars   = vals1
+                y = _render_char_boxes(y, chars, x=chars_x)
                 i += 1
             continue
 
-        # ── "Correct word = TABLE" line ───────────────────────────────────────
+        # ── "Correct word = T A B L E" line ──────────────────────────────────
         if line.startswith("Correct word"):
-            y = draw_wrapped(y, line, _b.F["body"], TEXT_DARK,
-                             x=INTRO_L1, max_w=RIGHT_EDGE - INTRO_L1, line_gap=fig(4))
+            m_cw = re.match(r'^Correct word\s*=\s*(.+)$', line)
+            if m_cw:
+                label = "Correct word ="
+                lw    = int(_b.draw.textlength(label, font=_b.F["medium"]))
+                cy    = y + fig(28) // 2
+                _b.draw.text((_ex_body_x, cy), label,
+                             font=_b.F["medium"], fill=(*CHARCOAL, 255), anchor="lm")
+                chars_x = _ex_body_x + lw + fig(10)
+                chars   = m_cw.group(1).split()
+                y = _render_char_boxes(y, chars, x=chars_x, filled=True)
+            else:
+                y = draw_wrapped(y, line, _b.F["body"], TEXT_DARK,
+                                 x=INTRO_L1, max_w=RIGHT_EDGE - INTRO_L1, line_gap=fig(4))
             i += 1
             continue
 
@@ -395,28 +435,53 @@ def render_intro(y, text, ch_num, ch_name):
                 i += 1
                 continue
 
+        # ── Standalone letter sequence e.g. "ACEG" → single filled box ─────────
+        if re.match(r'^[A-Z]{2,10}$', line):
+            cell_h  = fig(28)
+            bor_col = _b.chapter_table_bor(_b.CH_NUM)
+            fill_c  = _b.chapter_table_bg(_b.CH_NUM)
+            tw      = int(_b.draw.textlength(line, font=_b.F["body"]))
+            pad     = fig(12)
+            box_w   = tw + pad * 2
+            bx      = _ex_body_x
+            _b.draw.rectangle([bx, y, bx + box_w, y + cell_h],
+                              fill=(*fill_c, 255), outline=(*bor_col, 255), width=max(1, px(0.5)))
+            _b.draw.text((bx + box_w // 2, y + cell_h // 2), line,
+                         font=_b.F["body"], fill=(*TEXT_DARK, 255), anchor="mm")
+            y += cell_h + fig(8)
+            i += 1
+            continue
+
         # ── Answer: line (at L2) ──────────────────────────────────────────────
         m = re.match(r'^Answer:\s*(.*)', line)
         if m:
             avail = RIGHT_EDGE - INTRO_L1
             y = _inline_label_text(y, INTRO_L1, "Answer:", m.group(1).strip(), avail)
-            y += fig(4)
+            y += PARA_GAP
             i += 1
             continue
 
         # ── Solution: block (at L2) ───────────────────────────────────────────
         m = re.match(r'^Solution:\s*(.*)', line)
         if m:
-            sol = m.group(1).strip()
-            j   = i + 1
+            sol_lines = [m.group(1).strip()]
+            j = i + 1
             while j < len(lines):
                 nxt = lines[j].strip()
                 if not nxt or re.match(r'^Answer:', nxt):
                     break
-                sol += " " + nxt
+                sol_lines.append(nxt)
                 j += 1
-            avail = RIGHT_EDGE - INTRO_L1
-            y = _inline_label_text(y, INTRO_L1, "Solution:", sol, avail)
+            sol_x = _ex_body_x if _ex_active else INTRO_L1
+            avail = RIGHT_EDGE - sol_x
+            # First line inline with "Solution:" label
+            y = _inline_label_text(y, sol_x, "Solution:", sol_lines[0], avail)
+            # Remaining lines as separate paragraphs at sol_x
+            for sol_cont in sol_lines[1:]:
+                y += fig(4)
+                y = draw_wrapped(y, sol_cont, _b.F["body"], TEXT_DARK,
+                                 x=sol_x, max_w=avail, line_gap=fig(5))
+            y += PARA_GAP
             i = j
             continue
 
@@ -447,15 +512,17 @@ def render_intro(y, text, ch_num, ch_name):
         j        = i + 1
         while j < len(lines):
             nxt = lines[j].strip()
-            if not nxt or _STRUCT_RE.match(nxt):
+            if not nxt or _STRUCT_RE.match(nxt) or re.match(r'^[A-Z]{2,10}$', nxt):
                 break
             if combined.endswith("-"):
                 combined = combined[:-1] + nxt
             else:
                 combined += " " + nxt
             j += 1
+        body_x   = _ex_body_x if _ex_active else INTRO_L0
         y = draw_wrapped(y, combined, _b.F["body"], TEXT_DARK,
-                         x=INTRO_L0, max_w=RIGHT_EDGE - INTRO_L0, line_gap=fig(5))
+                         x=body_x, max_w=RIGHT_EDGE - body_x, line_gap=fig(5))
+        y += PARA_GAP
         i = j
         continue
 

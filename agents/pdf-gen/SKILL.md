@@ -143,19 +143,25 @@ Indentation levels (in Figma 72-DPI px, converted via `fig()`):
 |---|---|---|
 | `INTRO_L0 = fig(40)` | 40px | Section headings, "Type X:" label, bullets |
 | `INTRO_L1 = fig(87)` | 87px | Type description text ("Use the given numbers…") |
-| `INTRO_L2 = fig(154)` | 154px | Example label, Answer, Solution, Correct word |
+| `INTRO_L2 = fig(154)` | 154px | (reserved; not currently used as a hard indent) |
 
-- **Example label + text body**: both at `INTRO_L1`, text body x computed dynamically as `INTRO_L1 + label_width + fig(6)`
-- **Letter/Number table**: starts at same x as Example text body (`_ex_body_x`)
-- **ABCD options**: starts at same x as Example text body (`_ex_body_x`)
-- **Answer / Solution**: label at `INTRO_L1`
+- **Example label + text body**: both at `INTRO_L1`, text body x computed dynamically as `_ex_body_x = INTRO_L1 + label_width + fig(6)`
+- **Letter/Number table**: starts at `_ex_body_x`
+- **ABCD options**: starts at `_ex_body_x`
+- **Standalone letter sequence (e.g. "ACEG")**: single filled box drawn at `_ex_body_x`
+- **Body text after an Example block** (`_ex_active = True`): drawn at `_ex_body_x` (not `INTRO_L0`)
+- **Solution**: label + first line at `_ex_body_x` when inside Example block; continuation lines each on new line at `_ex_body_x`
+- **Answer**: always at `INTRO_L1` (not affected by `_ex_active`)
+- **`_ex_active` flag**: set `True` after Example block renders; reset `False` on new Type block
+
+**Paragraph spacing**: `PARA_GAP = fig(8)` added after every block (Type title, Type description, Example, Answer, Solution, default body text).
 
 Typography:
 - Section headings: UntitledSans Medium 14pt UPPERCASE
 - "Type I: Title": full line in UntitledSans Medium 12pt at `INTRO_L0`
 - Description text: UntitledSans Regular 12pt at `INTRO_L1`
 - Body / bullets: UntitledSans Regular 12pt
-- Example/Answer labels: UntitledSans Medium 12pt
+- Example/Answer/Solution labels: UntitledSans Medium 12pt
 
 ---
 
