@@ -33,8 +33,9 @@ All scripts live in `personal/agents/pdf-gen/scripts/`.
 | Script | Purpose |
 |---|---|
 | `imo_g3_base.py` | Shared base: canvas setup, fonts, colors, template headers, logo, footer, draw helpers |
-| `generate_g3_page.py` | Page builder: reads content.json, calls base templates, renders intro/MCQ pages |
+| `generate_g3_page.py` | Page builder: reads content.json, calls base templates, renders intro/MCQ/CA pages |
 | `extract_content.py` | Extracts text from source PDF into content.json |
+| `draw_hex_q3.py` | Standalone PIL script — generates Q3 hex-overlap diagram PNG (see Hex Diagram section) |
 
 ---
 
@@ -258,6 +259,30 @@ y = separator(y, gap_before=fig(12), gap_after=fig(24))
 | Q15–Q16 | `letter_plain` | letters | question text | — |
 | Q17–Q20 | `letter_tile_no_nums` | letters | `""` | `"The word formed belongs to:"` |
 
+### Ch3 CA (Cumulative Assessment) Question Type Map
+
+CA is a separate section (`"type": "assessment"` or `"type": "ca"`) that comes after the regular Assessment. It uses `diagram_geo` for visual questions and `text_only` for others.
+
+| Q# | type | notes |
+|---|---|---|
+| Q1 | `diagram_geo` | `kind: matrix_3x3`, `visual_opts` for ABCD shapes |
+| Q2 | `diagram_geo` | `kind: rotate_seq`, `visual_opts_rotations` for ABCD |
+| Q3 | `diagram_geo` | Custom PIL PNG (`hex-overlap-q3.png`), `max_width_figma: 120`, text options A=5,B=8,C=7,D=6 |
+
+For Q3 diagram, use `"image"` field pointing to the generated PNG path, NOT a `kind`-based diagram:
+
+```json
+{
+  "type": "diagram_geo",
+  "text": "...",
+  "diagram": {
+    "image": "personal/workspace/illustrate/props/hex-overlap-q3.png",
+    "max_width_figma": 120
+  },
+  "options": ["5", "8", "7", "6"]
+}
+```
+
 ### Ch3 Assessment Question Type Map
 
 | Q# | type | notes |
@@ -272,6 +297,165 @@ y = separator(y, gap_before=fig(12), gap_after=fig(24))
 | Q9 | `text_only` | plain |
 | Q10–Q14 | `letter_plain` | word tiles (EXPERIMENTAL etc.), no text |
 | Q15 | `letter_tile_no_nums` | tiles + text + subtext "The word formed belongs to:" |
+
+---
+
+## Geometric Shape Rendering System
+
+### Shape Size Constant
+
+```python
+_SHAPE_SZ = fig(26)   # canonical shape size — used in matrix, shapes_row, and options
+```
+
+All diagram/option shapes use this single constant — no per-function scaling.
+
+### Chapter-Dynamic Colors
+
+Shapes use chapter brand colors instead of hardcoded neutrals:
+
+```python
+def _draw_geo_shape(cx, cy, size, shape, dark=False):
+    fill   = _b.chapter_color(_b.CH_NUM)    if dark else _b.chapter_table_bg(_b.CH_NUM)
+    stroke = _b.chapter_table_bor(_b.CH_NUM)
+```
+
+- `dark=True` → Info-500 fill (accent color, e.g. `#74ACFC` for Ch3)
+- `dark=False` → Info-200 fill (light bg, e.g. `#DEECFF` for Ch3)
+- Stroke always Info-700 (e.g. `#407BD6` for Ch3)
+- In diagrams: shapes are always `dark=True`
+- In options: shapes are always `dark=True`
+
+### "?" Cell Font
+
+In all diagram types (`_diagram_matrix_3x3`, `_diagram_rotate_seq`), the "?" uses `sec_head` font (14pt Medium):
+
+```python
+_b.draw.text((cx, cy), "?", font=_b.F["sec_head"], fill=(*CHARCOAL,255), anchor="mm")
+```
+
+### `_options_geo_rotations` — Bare Triangle (No Box)
+
+Options for rotation-sequence diagrams show a bare triangle only (no square box), matching diagram triangle size:
+
+```python
+def _options_geo_rotations(y, rotations):
+    r2      = int(fig(48) * 0.30)   # matches diagram triangle circumradius
+    tri_dia = r2 * 2
+    group_w = box_sz + lbl_gap + tri_dia
+    # ...
+    _b.draw.polygon(pts, fill=(*_b.chapter_color(_b.CH_NUM),255))
+```
+
+Options are centered in each column: `ox = LEFT + i * col_w + (col_w - group_w) // 2`
+
+### `render_question()` — `diagram_geo` Branch
+
+The `diagram_geo` branch must return early after rendering to prevent the common options block from double-rendering:
+
+```python
+elif qtype == "diagram_geo":
+    diag = q.get("diagram", {})
+    if diag:
+        y = _render_diagram(y, diag)
+        if diag.get("kind") == "shape_pattern_opts":
+            return y
+    if opts:
+        if diag.get("visual_opts"):
+            y = _options_geo_shapes(y, diag["visual_opts"])
+            return y
+        if diag.get("visual_opts_rotations"):
+            y = _options_geo_rotations(y, diag["visual_opts_rotations"])
+            return y
+        y = options_auto(y, opts)
+        return y   # ← critical: prevents double-render from common options block
+```
+
+---
+
+## Hex Overlap Diagram (`draw_hex_q3.py`)
+
+Standalone PIL script for Q3's 3+3 flat-top hexagon grid. Run directly:
+
+```bash
+python3 personal/agents/pdf-gen/scripts/draw_hex_q3.py
+# Output: personal/workspace/illustrate/props/hex-overlap-q3.png
+```
+
+### Key Geometry
+
+```python
+r       = 115            # circumradius
+LW      = 4              # stroke width — define BEFORE step calculations
+h_half  = int(r * math.sqrt(3) / 2)
+step_x  = r              # makes lower-right of hex N touch lower-left of hex N+1 (zero gap)
+step_y  = h_half*2 - LW  # rows overlap by LW — closes residual junction gap
+```
+
+- Both rows left-aligned (same `x0`, no horizontal offset between rows)
+- Draw fill + outline together, back-to-front — later hexes cover earlier ones cleanly
+
+### Color Pattern
+
+| Position | Shade |
+|---|---|
+| Top-row L | Info-200 `#DEECFF` |
+| Top-row M | Info-400 `#9CC6FF` |
+| Top-row R | Info-600 `#5492F1` |
+| Bot-row L | Info-600 `#5492F1` |
+| Bot-row M | Info-200 `#DEECFF` |
+| Bot-row R | Info-400 `#9CC6FF` |
+| Stroke | Info-800 `#3464B1` |
+
+### Auto-Trim
+
+```python
+bbox = img.getbbox()
+PAD  = 20
+crop = (bbox[0]-PAD, bbox[1]-PAD, bbox[2]+PAD, bbox[3]+PAD)
+img  = img.crop(crop)
+```
+
+### Content.json Reference (`max_width_figma`)
+
+For Q3, set `max_width_figma: 120` — the cropped PNG (~501×433px) renders at the right size in the PDF column.
+
+---
+
+## Cumulative Assessment (CA) Pages
+
+CA sections follow the same template rules as MCQ, but use `"type": "assessment"` in content.json.
+
+### Question Type: `diagram_geo`
+
+Used for geometric/visual reasoning questions. Fields:
+
+```json
+{
+  "type": "diagram_geo",
+  "text": "Question text here",
+  "diagram": {
+    "kind": "matrix_3x3",
+    "cells": ["circle","square","triangle","square","triangle","circle","triangle","circle","?"],
+    "visual_opts": ["circle","square","triangle","pentagon"]
+  },
+  "options": ["A","B","C","D"]
+}
+```
+
+Supported diagram `kind` values:
+
+| kind | What it draws |
+|---|---|
+| `matrix_3x3` | 3×3 grid — shapes + "?" cell |
+| `rotate_seq` | Row of squares with rotating triangle inside, last is "?" |
+| `shape_pattern_opts` | Row of 4 shapes (no separate options) |
+| `shapes_row` | Horizontal row of shapes (used in question body) |
+
+`visual_opts` → shape labels for ABCD (`_options_geo_shapes`)
+`visual_opts_rotations` → rotation angles in degrees for ABCD (`_options_geo_rotations`)
+
+If neither is present, falls back to `options_auto(y, opts)` (text options).
 
 ---
 
@@ -299,7 +483,17 @@ personal/workspace/pdf-gen/ch3/
 ├── page-007.pdf     ← Temp2 (Assessment Q1–Q4)
 ├── page-008.pdf     ← Temp3 (Assessment Q5–Q9)
 ├── page-009.pdf     ← Temp4 (Assessment Q10–Q15)
+├── page-010.pdf     ← Temp2 (CA first page — Q1–Q3)  ✓ DONE
+├── page-011.pdf     ← Temp3 (CA pg 2)
+├── ...
 └── chapter-3.pdf   ← merged final
+```
+
+**Assets used by CA pages:**
+
+```
+personal/workspace/illustrate/props/
+└── hex-overlap-q3.png   ← generated by draw_hex_q3.py (501×433px)
 ```
 
 ---
