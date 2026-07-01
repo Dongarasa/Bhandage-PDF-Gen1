@@ -388,15 +388,24 @@ def _draw_wrapped_caps_q(y, text, x, max_w, line_gap=None):
         line_gap = fig(4)
     lh = _line_h(F["q_text"])
 
-    # Tokenise: split on **...** markers
+    # Tokenise: split on **...** markers; \n becomes a forced line-break sentinel
+    _NEWLINE = ("\n", "__newline__")
     tokens = []
     for part in _re.split(r'(\*\*[^*]+\*\*)', text):
         if part.startswith('**') and part.endswith('**'):
             tokens.append((part[2:-2], "medium"))
         elif part:
-            for w in part.split():
-                fk = "medium" if _re.match(r'^[A-Z]{2,}[?!.,;:\'\"]*$', w) else "q_text"
-                tokens.append((w, fk))
+            for segment in part.split('\n'):
+                if tokens and tokens[-1] != _NEWLINE:
+                    # mark the boundary only between non-empty segments
+                    pass
+                for w in segment.split():
+                    fk = "medium" if _re.match(r'^[A-Z]{2,}[?!.,;:\'\"]*$', w) else "q_text"
+                    tokens.append((w, fk))
+                tokens.append(_NEWLINE)
+    # strip trailing newline sentinel
+    while tokens and tokens[-1] == _NEWLINE:
+        tokens.pop()
 
     def _tok_w(tok, last):
         s = tok[0] if last else tok[0] + " "
@@ -412,6 +421,14 @@ def _draw_wrapped_caps_q(y, text, x, max_w, line_gap=None):
 
     line, cx = [], x
     for ti, tok in enumerate(tokens):
+        if tok == _NEWLINE:
+            # forced line break — flush current line and start fresh
+            if line:
+                y = _flush(line, y)
+                line, cx = [], x
+            else:
+                y += lh + line_gap
+            continue
         w = _tok_w(tok, ti == len(tokens) - 1)
         if cx + w > x + max_w and line:
             y = _flush(line, y)
