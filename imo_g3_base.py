@@ -395,17 +395,25 @@ def _draw_wrapped_caps_q(y, text, x, max_w, line_gap=None):
         if part.startswith('**') and part.endswith('**'):
             tokens.append((part[2:-2], "medium"))
         elif part:
-            for segment in part.split('\n'):
-                if tokens and tokens[-1] != _NEWLINE:
-                    # mark the boundary only between non-empty segments
-                    pass
-                for w in segment.split():
+            segments = part.split('\n')
+            for si, segment in enumerate(segments):
+                words = segment.split()
+                for w in words:
                     fk = "medium" if _re.match(r'^[A-Z]{2,}[?!.,;:\'\"]*$', w) else "q_text"
                     tokens.append((w, fk))
-                tokens.append(_NEWLINE)
+                # only insert newline sentinel between segments (not after last)
+                if si < len(segments) - 1 and (words or tokens):
+                    tokens.append(_NEWLINE)
     # strip trailing newline sentinel
     while tokens and tokens[-1] == _NEWLINE:
         tokens.pop()
+    # collapse consecutive newline sentinels into one
+    deduped = []
+    for tok in tokens:
+        if tok == _NEWLINE and deduped and deduped[-1] == _NEWLINE:
+            continue
+        deduped.append(tok)
+    tokens = deduped
 
     def _tok_w(tok, last):
         s = tok[0] if last else tok[0] + " "
